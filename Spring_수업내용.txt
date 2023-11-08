@@ -1,0 +1,441 @@
+
+1. 전체 수업 및 방향성
+   spring(6일) > spring boot(2주)
+   jpa(1.5주) > 
+   AWS 심화 // 11월 중순
+   2차 프로젝트 => AWS 다양한 서비스를 어떻게 구성해서 운영환경을 만들었는지?
+                  수업일수 5일, 
+                  cloud native application, 
+                  실습환경을 미리 받는다면, 가능하면 사전학습를 고려.
+                  => 확인할 리스트를 준비해서, cloud 수업에서 많이 확인.
+                  => 3팀에서 만든 소스 => AWS 다양한 서비스 접목을 고려.(운영)
+
+                  => 3팀에서 만든 소스   1. 소스(코드)  => CI/CD
+                                        2. 실행 패키지 => 
+                                                      AWS 다양한 서비스 접목을 고려.(운영)
+
+2. spring, spring boot
+   - spring 에서는 spring boot 를 사용하기 위한 개념을 학습.
+     DI, IoC, AOP등 을 학습
+     spring 의 교재는 없음.
+     spring 개념이 어려울수 있음. 
+     model 2 방식으로 게시판을 만들어 봄. 필요한 것은 모두 직접 코딩함.
+     spring 교재 책은 학습량이 많을 수 있음.
+
+   - 2차 프로젝트에서는 spring boot 를 사용하게 됨.
+   - spring boot 교재
+     spring boot 의 다양한 기술을 챕터별로 나누어서 설명.
+     게시판, 블로그 만드는 프로젝트가 없음.
+     수업 진도를 보고, 간단한 프로젝트를 하려고 생각중.
+
+3. spring
+   3.1 배경
+       EJB(Enterprise Java Bean) 로 개발시 어렵고, 무거운 것이 단점.
+
+       경량 프레임워크의 필요성이 대두됨. => Spring
+
+       애플리케이션에서 사용되는 여러 가지 빈(클래스 객체)을 개발자가 아닌
+       스프링 프레임워크가 권한을 가지고 직접 관리하는 특징이 있음.
+
+       model2에서는 controller 가 요청 처리를 위해서는 해당 dao 가 반드시 필요함.
+       controller는 dao를 의존하게 됨. dao 가 2개 이상이 필요해지는 경우는 어떻게 되나?
+       => 강한 결합 대신에 느슨한 결합이 되도록 개발을 해야 함.
+       => 느슨한 결합을 제공해주는 것이 spring 임. ( DI 개념을 활용 ).
+
+   3.2 특징
+       - EJB 보다 가볍고 배우기도 쉽고, 경량컨테이너의 기능을 수행함.
+       - 제어역행(IoC, Inversion of Control) 기술을 이용해 애플리케이션 간의
+         느슨한 결합을 제어함.
+       - 의존성 주입(DI, Dependency Injection) 기능을 지원함.
+       - 관점 지향(AOP, Aspect-Oriented Programming) 기능을 이용해 자원 관리를 함.
+       - 수많은 라이브러리와의 연동 기능을 지원함.
+
+       - 제어역행(IoC)
+         빈(클래스 객체) 등을 개발자가 코드 레벨에서 생성하지 않고
+         프레임워크가 생성하여 사용하는 방법.
+
+       - 의존성 주입(DI)
+         Model2 에서는 Controller 가 DAO를 필요하듯이
+         의존관계에 있는 빈을 프레임워크에서 관계를 맺어줌.
+
+       - 관점 지향(AOP)
+         핵심 기능 외의 부수적인 기능들을 분리 구현함으로써 모듈성을 증가시키는 방법.
+
+   3.3 스프링 프레임워크의 구성
+       - Core : IoC 기능을 제공
+       - Context : 빈에 대한 접근 방법을 제공
+       - DAO : JDBC 기능을 편리하게 사용할 수 있도록 함.
+       - ORM : 마이바티스 같은 영속성 관련 프레임워크와 연동된 기능을 제공.
+               마이바티스는 Sql Mapper Framework임.
+       - AOP : 관점지향기능을 제공.
+       - WebMVC : 스프링에서 MVC 구현에 관련된 기능을 제공.
+
+   3.4 의존성 주입(DI)
+       - 빈간의 의존 관계를 개발자가 직접 코딩을 통해 컴포넌트(클래스)에 
+         부여하는 것이 아니라 컨테이너(spring)가 연관관계를 직접 규정하는 것임.
+         => 약한 결합이 됨.(loosely coupled)
+
+      - 의존성 주입 방법
+        1. xml을 활용
+        - xml file에 사용할 클래스(bean)를 등록.
+          id, class 의 정보를 등록해서 사용함. 여기서 id 는 인스턴스 변수처럼 사용.
+        - XmlBeanFactory 클래스를 이용해서 xml file 정보를 읽음.
+        - BeanFactory.getBean()의 매개변수로 xml의 id를 이용하여 객체를 반환받음.
+        - 반환된 객체를 이용하여, 메소드를 호출하여 사용아면 됨.
+
+        - 멤버변수 초기화
+          "property 태그" 를 이용.
+
+        - 생성자를 이용한 초기화
+          "constructor-arg 태그" 를 이용.
+
+        2. 어노테이션을 이용
+
+   3.5 관점 지향 프로그래밍(AOP)
+       - 애플리케이션 개발시 트랜잭션, 예외처리, 로그 기록 등은 기능은
+         공통으로 사용되는 기능임.
+       - 비즈니스 로직 처리시 이런 공통 기능을 모든 곳에서 구현을 하게 되면,
+         유지보수가 점점 더 힘들어지게 됨. 이러한 부분을 모듈화할 필요가 있음.
+       - 이러한 문제를 관점 지향 프로그래밍으로 해결할 수 있음.
+
+       - AOP는 메소드 안의 주기능과 보조 기능을 분리한 후 선택적으로 적용해서
+         사용한다는 개념임.
+       - AOP 를 사용하게 되면 보조 기능을 하나의 장소에 모아서 관리를 할 수 있음.
+         또, 보조 기능을 주기능에서 선택적으로 적용할 수 있어 코드가 단순해지고
+         가독성이 향상됨.
+
+       - AOP 의 사용 방법
+         advice : 부기능
+                  aspect(보조기능) 의 실체 구현체를 의미함.
+         target : 주기능
+                  advice 가 적용되는 클래스를 의미함.
+
+         - 타깃 클래스를 지정.
+         - advice 클래스를 지정.
+         - 설정 파일(xml)에서 point cut( advice가 적용되는 대상 )을 설정.
+         - 설정 파일(xml)에서 어드바이스와 포인트컷을 결합
+         - 설정 파일(xml)에서 스프링의 ProxyFactoryBean 클래스를 이용해서
+          타깃에 어드바이스를 설정.
+         - getBean() 메서드로 빈 객체에 접근해서 사용함.
+
+         - xml 대신에 어노테이션을 이용할 수 있음.
+
+         - AOP 적용 전.
+         log.info();         //AOP의 부기능(advice) 됨.
+         cal.add(100, 200);  //주기능(target)
+         log.info();         //AOP의 부기능(advice) 됨.
+
+         - AOP 적용 후.
+         cal.add(100, 200);  // 관심사(비즈니스 로직) 완전 분리가 됨.
+                             // 유지보수, 가독성, 모듈화(재사용성) 
+
+       - AOP 가 많이 적용되는 부분
+         로깅, 보안, 트랜잭션
+
+
+   3.6 Spring MVC
+       - 특징
+         모델2 아키텍처를 지원.
+         다양한 view  기술(tiles 등)과 연계가 쉬움.
+         태그 라이브러리(JSTL 등) 통해 출력, 테마 적요 등을 쉽게 할 수 있음.
+       - 구조(구성 요소)
+         DispatcherServlet
+           클라이언트의 요청을 받아서 해당 요청에 대한 컨트롤러를 선택하여
+           클라이언트의 요청을 전달함.
+         HandlerMapping
+           클라이언트가 요청한 URL을 처리할 컨트롤러를 지정함.
+         Controller
+           클라이언트의 요청을 처리한 후 그 결과를 DispatcherServlet에 전달.
+           spring f/w에서 제공하는  controller를 상속받아서 구현해야 함.
+         ModelAndView
+           컨트롤러가 처리한 결과 및 뷰 선택에 필요한 정보를 저장
+         ViewResolver
+           컨트롤러의 처리 결과를 전달할 뷰를 지정함. JSP를 지정.
+         View
+           컨트롤러의 처리 결과 화면을 생성함. JSP가 됨.
+
+       - Controller
+         단일액션컨트롤러(SimpleUrlController)
+            웹브라우저의 요청 -> DispatcherServlet(Spring)
+             -> SimpleUrlController(Spring) <-> action-servlet.xml 매핑정보 
+             -> ModleAndView(/index.jsp)
+
+             각 요청에 해당하는 스프링 Controller 인터페이스를 구현한 각각의 컨트롤러 클래스를
+             생성해서 사용해야만 함.
+
+         다중액션컨트롤러(MultiActionController)
+
+             여러 요청에 대해 한 개의 컨트롤러에 구현된 각 메소드로 처리가 가능해짐.
+
+             사용되는 스프링 클래스
+                - MultiActionController
+                - PropertiesMethodNameResolver
+                  URL 요청명으로 컨트롤러의 설정 파일에서 미리 설정된 메도드를 호출해서 사용.
+                - InternalResourceViewResolver
+                  JSP, HTML 파일과 같이 웹 애플리케이션의 내부 자원을 이용해 뷰를 생성하는
+                  기능을 제공함.
+
+                  기본적으로 사용하는 View class로서 prefix와 suffix 프로퍼티를 이용.
+
+   3.7 Spring JDBC
+       - Spring JDBC 설정 파일
+         web.xml 
+           ContextLoaderListner 을 이용해서 빈 설정 XML 파일을 읽어 들임.
+           action-dataSource.xml, action-service.xml 등을 읽어들임.
+         action-servlet.xml
+           기존에 사용했던 것처럼 bean 을 설정함.
+         action-dataSource.xml
+           스프링JDBC 설정에 필요한 정보를 설정함.
+           jdbc.properties 의 정보를 활용함.
+         jdbc.properties
+           H2 데이터베이스 연결 정보를 관리.
+         action-service.xml
+           서비스 빈 생성을 설정. service 와 dao 의 의존관계를 설정.
+           controller -> service -> dao 
+
+   3.8 MyBatis 프레임워크
+       - SQL Mapper 임.
+       - 특징
+         - SQL 실행 결과를 자바 빈즈 또는 Map 객체에 매핑해줌.
+         - SQL 을 소스 코드 레벨에서 관리하지 않고, XML 로 분리해서 관리함.
+           따라서, SQL 문과 프로그램밍 코드를 분리해서 구현하게 됨.
+         - 데이터소스 기능과 트랜잭션 처리 기능을 제공함.
+       - MyBatis 관련 설정 파일
+         - SqlMapConfig.xml
+           데이터베이스 연동 시 반환되는 값을 저장할 빈이나 트랜잭션, 데이터소스 등
+           마이바티스 관련 정보를 설정함.
+         - member.xml
+           회원 정보 관련 SQL 문을 설정 및 관리함.
+       - SqlSession 클래스에서 제공하는 메소드
+         - select
+            List selectList(sqlId)
+            List selectList(sqlId, 검색조건)
+            selectOne(sqlId)
+            selectOne(sqlId, 검색조건)
+            Map<key, value> selectMap(sqlId, 검색조건)
+         - insert
+            int insert(sqlId, Object)
+         - update
+            int update(sqlId, Object)
+         - delete
+            int delete(sqlId, Object)
+       - 동적 SQL 사용하기
+         - 데이터베이스 벤더별로 차이가 있음.
+         - MyBatis에서 제공하는 문법을 사용해서 동적으로 SQL을 추가 해서 사용하는 것임.
+           select * from t_member; 
+
+           조건이 필요한 경우는 별도로 조건절만 추가해서 기존의 SQL을 재사용하도록 함.
+           select * from t_member
+            where id = 'hong';
+
+         - if(단일 조건), choose(다중 조건), foreach(반복)
+
+
+
+   3.9 Spring JDBC 와 MyBatis 를 활용한 트랜잭션 처리
+       - 트랜잭션
+         여러 개의 DML 명령문을 하나의 논리적인 작업 단위로 묶어서 관리하는 것.
+         All 또는 Nothing 방식으로 작업단위가 처리됨.
+
+       - 트랜 잭션 처리의 예
+         - 쇼핑몰에서 상품 주문 시 주문 상품을 테이블에 등록(insert)하는 기능과
+           주문자의 포인트를 갱신(update)하는 기능.
+         - 은행에서 송금 시 송금자의 잔고를 갱신(update)하는 기능과 
+           수신자의 잔고를 갱신(update)하는 기능.
+         - 게시판 글 조회 시 해당 글을 조회(select)하는 기능과 조회 수를 갱신(update)한는 기능.
+
+       - 스프링의 트랜잭션 속성
+         - xml 또는 어노테이션
+         - propagation 속성 사용. 트랜잭션 규치을 설정.
+         - propagation 속성 지정. REQUIRED로 지정.
+           트랜잭션을 사용하는데, 트랜잭션이 없으면 새로운 트랜잭션을 생성해서 사용. 기본값.
+         - 트랜잭션은 서비스 단위(트랜잭션 단위)로 어노테이션을 설정.
+           @Transactional(propagration=Propagration.REQUIRED)
+
+       - 트랜잭션 설정 구성 요소
+         - DataSourceTransactionManager
+           Spring framework 에서 제공해주는 트랜잭션관리자중의 하나.
+
+           spring의 spring-tx와 함께 사용됨. 데이터베이스와의 상호작용을 트랜잭션으로 관리하고,
+           트랜잭션의 commit 및 rollback 를 처리하는 역할을 함.
+
+           DataSource 를 기반으로 트랜잭션을 시작하고 관리함.
+
+           action-mybatis.xml에 bean으로 설정해서 사용.
+
+   4.0 Spring 어노테이션
+       - 클라이언트 요청 매핑, 데이터 바인딩, 빈 주입 등을 XML 대신에 어노테이션으로 설정해서 사용.
+       
+       - 스프링 어노테이션 제공 클래스
+         DefaultAnnotationHandlerMapping : 컨트롤러 매핑
+            클래스 레벨에서 @RequestMapping 을 처리
+         AnnotationMethodHandlerAdapter  : 메서드 매핑
+            메소드 레벨에서 @RequestMapping 을 처리
+
+       - <context:component-scan> 태그
+         태그를 이용래서 패키지 이름을 지정하면 애플리케이션 실해 시 해당 패키지에서
+         어노테이션으로 지정된 클래스를 빈으로 만들어 줌.
+
+         @Controller : 지정한 패키지 하위의 지정한 클래스를 컨트롤러 Bean으로 자동 변환.
+         @Service    : 지정한 패키지 하위의 지정한 클래스를 서비스 Bean으로 자동 변환.
+         @Repository : 지정한 패키지 하위의 지정한 클래스를 DAO Bean으로 자동 변환.
+         @Component  : 지정한 패키지 하위의 지정한 클래스를 Bean으로 자동 변환.
+
+         어노테이션으로 지정된 클래스들은 스프링 실행시 자동으로 빈으로 생성됨.
+
+       - @RequestParam
+         request.getParameter 대신에 사용.
+         전송되는 매개변수가 많은 경우, Map 에 저장할 수 있음.
+
+         required 속성.
+         - 생략하면, 기본값은 true.
+         - 속성값을 true로 설정하면, 전달되믄 매개변수가 반드시 있어야 함. 없으면 에러 발생.
+         - 속성값을 false 로 설정하면 메소드 호출 시 지정한 이름의 매개변수가 전달되면
+           값을 저장하고 없으면 null 로 저장함.
+
+       - @ModelAttribute
+         - VO 클래스의 속성에 매개변수 값이 자동으로 설정됨.
+         
+       - Model 클래스
+         Model 클래스를 이요하면 메서드 호출 시 JSP로 값을 바로 바이딘해서 전달할 수 있음.
+         Model 클래스의 addAttribute() 메소드는 ModelAndView의 addObject() 메서드와
+         동일한 기능을 함.
+
+       - @Autowired
+         기존 XML 파일에서 각각의 빈을 DI로 주입했던 기능을 코드에서 어노테이션으로 
+         자동으로 수행.
+
+         @Autowired 를 사용하면 별도의 setter나 생성자 없이 속성에 빈을 주입할 수 있음.
+
+
+   4.1 STS(Spring Tool Suite)3 에서의 spring 개발
+       - STS는 스프링 기반의 웹 애플리케이션 개발용 도구.
+       - STS 설치
+         이클립스에서 STS 플러그인을 설치해서 사용. => 현재는 설치는 되나, 실행시 에러 발생.
+         Eclipse Marketplace 화면에서 플러그인 설치로는 실행이 되지 않았음.
+
+         spring.io 에서 STS를 직접 다운로드 해서 사용.
+         Latest STS3 Downloads 카테고리에서 Spring Tool Suite 3.9.18 를 다운받아서 사용.
+
+         - STS3 환경 설정.
+           JVM을 직접 지정. STS.ini 파일에서 JVM을 명시적으로 설정.
+
+           -vm
+           C:\Program Files\Java\jdk-11\bin\javaw.exe
+
+           STS 용 workspace 설정.
+
+           인코딩 설정.
+
+           아파치 톰캣 서버 설정.
+
+         - STS3 프로젝트 구성
+           pom.xml
+             스프링에서 사용되는 여러 가지 라이브러리를 설정해서 다운로드해서 사용.
+           src/main/java
+           src/main/resources
+             프로퍼티, XML 등의 리소스 파일이 저장됨.
+           src/main/webapp
+           src/test/java
+              Junit 등의 테스트 파일이 위치
+           src/test/resources
+              테스트에 필요한 리소스 파일이 위치
+
+   4.2 인터셉터
+       - Filter
+         Controller 에서 session을 확인하면 모든 Controlle에서 확인을 해야하는 문제점.
+         session 체크를 Filter에 구현. Controller로 진행하기 전에 먼저 처리됨.
+         한 곳에서 모든 것을 관리할 수 있는 장점.
+
+       - AOP(관점지향 프로그래밍)
+         주기능(비즈니스와 관련된 부분)과 부기능(비스니스와 거리가 있는 부분)을 
+         구분해서 구현하는 방법
+
+       - Intercepter
+         Client 요청 -> Filter -> view -> DispatcherServlet -> Intercepter -> controller -> 비즈니스 로직
+
+         - 처리 타이밍(스프링에서 지원하는 메소드)
+           preHandle() : 컨트롤러 실행 전 호출 됨.
+                         Intercepter -> controller 의 사이에서 호출 됨.
+           postHandle() : 컨트롤러 실행 후 DispatcherServlet 이 view로 보내기 전에 호출 됨.
+                         view -> DispatcherServlet 의 사이에서 호출 됨.
+           afterCompletion() : 뷰까지 수행한 후 호출됨.
+                         Filter -> view 의 사이에서 호출됨.
+
+         - 구현 
+           HandlerInterceptorAdapter 상속 받아서 해당 메소드를 오버라이딩해서 구현.
+           HandlerInterceptorAdapter 를 구현체를 XML에서 등록.(spring5에서는 어노테이션 지원.)
+           Spring의 messageSource 기능을 사용해서 XML에서 등록.( 각 언어별 properties 파일을 읽어들임. )
+
+
+         - 예제
+           다국어(한글, 영어) 페이지 설정 기능을 preHandle() 에서 구현.
+           한글, 일본어 properties 파일로 작성 => unicode로 작성.
+           
+          
+
+
+   4.3 Rest API Controller
+       - Spring REST 기능을 사용하기 위해서는
+         STS의 pom.xml에서 springframework의 버전을 4 로 변경.
+
+       - 요청을 처리하기 위한 controller 를 REST 기능의 bean으로 등록하기 위해서는
+         @RestController 를 사용.
+
+       - 메소드 매핑에 대한 구현부에서 필요한 형식의 JSON 데이터를 작성해서 반환하도록 함.
+         VO, list, Map 등으로 return 하면 spring에서 JSON 형태로 처리해서 전송함.
+
+       - JSON 데이터를 사용하기 위해 pom.xml JSON 라이브러리 추가.
+
+       - @PathVarialble
+         클라이언트에서 URL 요청시 함께 전송한 매개변수를 받아서 처리할 수 있음.
+
+       - @RequestBody
+         클라이언트에서 전송되는 JSON 데이터를 객체로 자동 변환함.
+
+       - @ResponseEntity
+         JSON 데이터와 함께 서버의 상태코드를 함께 전송함.
+
+       - REST 방식의 URI 표현
+         - HTTP 메서드의 기능
+           POST  : 추가(create)
+           GET   : 조회(select)
+           PUT   : 수정(update)
+           DELETE : 삭제(delete)
+
+         - REST URI 표현
+           /작업명/기본키 + 메소드 + 데이터
+
+           POST   : /board + 데이터    => 새 글 등록하기
+           GET    : /board/100         => 100 번 글 조회
+           PUT    : /board/100 + 데이터 => 100 번 글 수정
+           DELETE : /board/100          => 100 번 글 삭제
+
+
+   4.4 예외처리
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
